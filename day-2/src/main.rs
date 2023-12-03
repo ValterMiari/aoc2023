@@ -4,6 +4,7 @@ fn main() {
     let input1 = include_str!("./input1.txt");
     let games = parse_games(input1);
     println!("Solution to part1: {}", part1(&games, &MAX_HAND));
+    println!("Solution to part2: {}", part2(&games))
 }
 
 struct Game {
@@ -33,11 +34,41 @@ fn part1(games: &Vec<Game>, max_hand: &ElfHand) -> i32{
 
 fn is_valid_game(game: &Game, max_hand: &ElfHand) -> bool {
 
-    let result = game.rounds.iter()
+    game.rounds.iter()
                .all(|hand| 
-                    hand.red <= max_hand.red && hand.green <= max_hand.green && hand.blue <= max_hand.blue);
-    result
+                    hand.red <= max_hand.red && hand.green <= max_hand.green && hand.blue <= max_hand.blue)
 } 
+
+fn part2(games: &Vec<Game>) -> i32 {
+
+    let mut total = 0;
+    for game in games {
+
+        total += get_power(&game.rounds)
+    }
+
+    total
+}
+
+fn get_power(hands: &Vec<ElfHand>) -> i32{
+
+    let mut max_hand = ElfHand {red: 0, green: 0, blue: 0};
+
+    for hand in hands {
+
+        if hand.red > max_hand.red {
+            max_hand.red = hand.red;
+        }
+        if hand.green > max_hand.green {
+            max_hand.green = hand.green;
+        }
+        if hand.blue > max_hand.blue {
+            max_hand.blue = hand.blue;
+        }
+    }
+
+    max_hand.red * max_hand.green * max_hand.blue
+}
 
 fn parse_games(input: &str) -> Vec<Game> {
 
